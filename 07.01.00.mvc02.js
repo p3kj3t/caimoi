@@ -27,7 +27,8 @@ if (app.get('env') === 'production') {
 app.use(express.static('public'));          
 app.set('view engine', 'ejs');              ///***** */
 app.use(session(sess));
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT|| 3000);
+
 
 /// ***************** ***************** *****************
 /// ***************** ***************** Config DB CONNECTION
@@ -44,12 +45,12 @@ const viewLogin = require('./controllers/logincontroller');
 
 /// ***************** 
 const uri = 'mongodb://localhost:27017/atnshop';
-const urixx = "mongodb+srv://db03:aGBZRta11CBmt8qL@cluster0-q8a6f.mongodb.net/CloudDB?retryWrites=true&w=majority";
-const uri = "mongodb+srv://kiet:kiet @cluster0-mp7dy.mongodb.net/<abc>?retryWrites=true&w=majority";
+//const urixx = "mongodb+srv://db03:aGBZRta11CBmt8qL@cluster0-q8a6f.mongodb.net/CloudDB?retryWrites=true&w=majority";
+
 
 /// ***************** ***************** *****************
 /// ***************** Database & Bảng dữ liệu cần Truy vấn
-const NameDataBase =  "abc"; // "CloudDB";
+const NameDataBase =  "atnshop"; // "CloudDB";
 var xflag = 0;
 var vResult = [];
 var accLogin = null;
@@ -181,7 +182,7 @@ function viewPayment(request, response) {
     listsp = [];
     for (i=0; i< listkq.length / 2; i++) {
         listsp.push(
-            { Name : "/ " + listkq[i*2], Price : 3000, Num: listkq[i*2+1]},
+            { Name : "/ " + listkq[i*2], Price : 100000, Num: listkq[i*2+1]},
         );
     }
     
