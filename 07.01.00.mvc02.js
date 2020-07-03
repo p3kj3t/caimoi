@@ -1,7 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 27017
-//const port = process.env.PORT|| 3000
+const port = 8080
 var session = require('express-session')
 var path = require('path');
 var router = express.Router();  
@@ -39,22 +38,19 @@ const mongosee = require('mongoose');
 /// *****************  Models
 const Product = require('./models/product');
 const Staff = require('./models/staff');
-const Order = require('./models/order').order;
-const orderSchema  = require('./models/order').schema;
 
 
 /// *****************  Controllers
 const viewLogin = require('./controllers/logincontroller');
 
 /// ***************** 
-//const uri = 'mongodb://localhost:27017/ATN_Shop';
-//const urirem = "mongodb+srv://db03:aGBZRta11CBmt8qL@cluster0-q8a6f.mongodb.net/ATN_Shop?retryWrites=true&w=majority";
-const uri = "mongodb+srv://minhhhieumh14:hieu123@cluster0.xssol.mongodb.net/ATN_Company?retryWrites=true&w=majority";
+//const uri = 'mongodb://localhost:27017/atnshop';
+//const uri = "mongodb+srv://db03:aGBZRta11CBmt8qL@cluster0-q8a6f.mongodb.net/CloudDB?retryWrites=true&w=majority";
+const uri = "mongodb+srv://kiet:kiet@cluster0-mp7dy.mongodb.net/atnshop?retryWrites=true&w=majority";
 
 /// ***************** ***************** *****************
 /// ***************** Database & Bảng dữ liệu cần Truy vấn
-//const NameDataBase =  "ATN_Shop"; // "CloudDB";
-const NameDataBase =  "ATN_Company";
+const NameDataBase =  "atnshop"; // "CloudDB";
 var xflag = 0;
 var vResult = [];
 var accLogin = null;
@@ -102,7 +98,7 @@ async function responseDB(response, xview, xModel, xQuery, xparams, xtag, xNext=
 
         if (kq) {
             xparams[xtag] = kq;            
-            console.log(xview + "\t Thanh cong !");
+            console.log(xview + "\t THanh cong !");
             response.render(xview, xparams);
         } else {
             response.render(xNext, { mesg : "... KO co Data DB ! "} );
@@ -131,10 +127,10 @@ app.get('/login', viewLogin);
 /// ***************** ***************** *****************
 app.get('/products', viewProducts);
 async function viewProducts(request, response) {
-    //if (typeof (request.session.login_user) == "undefined")
-    //{
-        //response.redirect("/login");
-    //}
+    if (typeof (request.session.login_user) == "undefined")
+    {
+        response.redirect("/login");
+    }
     responseDB(response, "productlist",
 				Product, {}, { username : request.session.login_user }, "productlist");
 }
@@ -178,34 +174,18 @@ function viewOrder(request, response) {
 /// /payment
 /// ***************** ***************** *****************
 app.get('/payment', viewPayment);
-async function viewPayment(request, response) {
+function viewPayment(request, response) {
     //response.send("Web - PAYMENT page !" + request.query.dssp);
     var dssp = request.query.dssp;
     var listkq = dssp.split("_");
-    var vusername = request.session.login_user;
 
     listsp = [];
-    for (i=0; i< listkq.length / 3; i++) {
+    for (i=0; i< listkq.length / 2; i++) {
         listsp.push(
-            { Name : "Tivi " + listkq[i*3], Price : listkq[i*3+2], Num: listkq[i*3+1]},
+            { Name : "| " + listkq[i*2], Price : 100000, Num: listkq[i*2+1]},
         );
     }
-
-    var orderX = new Order( {
-        _id : new mongosee.mongo.ObjectId(),
-        StaffID : vusername,
-        ItemsList : dssp,
-        Total : 0
-    } );
-
-    var connect = mongosee.createConnection(uri);
-    const xOrder = mongosee.model("Order", orderSchema, "Order");
-    await xOrder.create({
-        _id : new mongosee.mongo.ObjectId(),
-        StaffID : vusername,
-        ItemsList : dssp,
-        Total : 0
-    });
+    
 
     response.render("payment", { username : request.session.login_user , productlist : listsp });
 }
@@ -249,4 +229,3 @@ function viewReview(request, response) {
 /// ***************** ***************** *****************
 /// ***************** ***************** *****************
 app.listen(port, () => console.log(`\n\tWeb app listening at http://localhost:${port}`));
-© 2020 GitHub, Inc.
